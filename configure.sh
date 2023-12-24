@@ -112,7 +112,14 @@ dl_zsh() {
         yes n | sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     fi
 
-    theme="\"agnoster\""
+    if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k" ]; then
+        heading "ZSH" "Configuration"
+        git clone --depth=1 "https://github.com/romkatv/powerlevel10k.git" "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
+        cp "./Files/.zshrc" "$HOME/"
+        cp "./Files/.p10k.zsh" "$HOME/"
+    fi
+
+    theme="\"powerlevel10k/powerlevel10k\""
     old_theme="\"robbyrussell\""
     ! grep -q "ZSH_THEME=${theme}" "$HOME/.zshrc" &&
         sed -i "s/ZSH_THEME=${old_theme}/ZSH_THEME=${theme}/" "$HOME/.zshrc"
