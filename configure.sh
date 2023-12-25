@@ -119,10 +119,21 @@ dl_zsh() {
         cp "./Files/.p10k.zsh" "$HOME/"
     fi
 
+    heading "ZSH" "Configuration"
     theme="\"powerlevel10k/powerlevel10k\""
     old_theme="\"robbyrussell\""
     ! grep -q "ZSH_THEME=${theme}" "$HOME/.zshrc" &&
         sed -i "s/ZSH_THEME=${old_theme}/ZSH_THEME=${theme}/" "$HOME/.zshrc"
+
+    ! test -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions" &&
+        git clone "https://github.com/zsh-users/zsh-autosuggestions" "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    ! grep -q "plugins=(.*zsh-autosuggestions.*)" "$HOME/.zshrc" &&
+        sed -i "/^plugins=/ s/)/ zsh-autosuggestions)/" "$HOME/.zshrc"
+
+    ! test -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" &&
+        git clone "https://github.com/zsh-users/zsh-syntax-highlighting" "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+    ! grep -q "plugins=(.*zsh-syntax-highlighting.*)" "$HOME/.zshrc" &&
+        sed -i "/^plugins=/ s/)/ zsh-syntax-highlighting)/" "$HOME/.zshrc"
 
     echo "$pass" | chsh -s "$(command -v zsh)"
 
