@@ -147,6 +147,12 @@ dl_zsh() {
     git config --global difftool.vscode.cmd "code --wait --diff \$LOCAL \$REMOTE"
     git config --global difftool.prompt false
 
+    termux_dir="/data/data/com.termux/files/home/.termux"
+    font_url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/UbuntuMono/Regular/UbuntuMonoNerdFontMono-Regular.ttf"
+    mkdir -p "$termux_dir"
+    test -f "${termux_dir}/font.ttf" || wget -O "${termux_dir}/font.ttf" "$font_url"
+    test -f "${termux_dir}/colors.properties" || cp ./Files/colors.properties "${termux_dir}/colors.properties"
+
     heading "ZSH" "Configuration"
     install_ext "eamodio.gitlens" "mhutchie.git-graph"
 
