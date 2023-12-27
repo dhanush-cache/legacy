@@ -73,11 +73,14 @@ end_loading() {
 }
 
 install() {
+    at_home=false
     if [ "$HOME" = "/data/data/com.termux/files/home" ]; then
         source "./Files/termux_adapter.sh"
     elif [ "$HOME" = "/root" ] && ! command -v sudo >/dev/null; then
         apt update -y
         apt install sudo -y
+    else
+        at_home=true
     fi
     args=("$@")
     length=${#args[@]}
@@ -104,8 +107,9 @@ install() {
         echo -ne "${c[33]}Choose one option: ${c[0]}" && read -r choice
         case "$choice" in
         1)
+            [ -z "$pass" ] && $at_home && echo -ne "${c[33]}Enter your password: ${c[0]}" && read -ers pass
             loading "Updating Packages..." &
-            sudo apt update -y >/dev/null 2>&1
+            echo "$pass" | sudo -S apt update -y >/dev/null 2>&1
             yes y | sudo apt upgrade -y >/dev/null 2>&1
             end_loading "Updating Packages..."
             for package in "${commands[@]}"; do
