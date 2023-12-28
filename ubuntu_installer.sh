@@ -52,5 +52,64 @@ elif [ "$HOME" = "/root" ]; then
 
     copy_repo "/home/${user}"
 else
-    echo "Ubuntu Desktop Installer"
+    sudo apt update -y
+    sudo apt install -y gnome-shell gnome-terminal gnome-tweaks
+    sudo apt install -y dbus-x11 tigervnc-standalone-server
+    sudo apt install -y yaru-theme-gtk yaru-theme-icon nautilus gnome-shell-extensions gnome-shell-extension-ubuntu-dock
+
+    heading "Ubuntu" "Installer"
+    if apt list firefox 2>/dev/null | grep -q snap; then
+        install software-properties-common software-properties-common
+        echo -e "\n" | sudo add-apt-repository ppa:mozillateam/ppa
+        cp ./Files/mozilla-firefox "/etc/apt/preferences.d/mozilla-firefox"
+        sudo apt remove -y firefox
+    fi
+    install "FireFox" "firefox"
+
+    heading "Ubuntu" "Installer"
+    if ! fc-list | grep -q Nerd; then
+        install "Wget" "wget"
+        font_dir="/usr/share/fonts/"
+        font_url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/UbuntuMono/Regular/UbuntuMonoNerdFontMono-Regular.ttf"
+        mkdir -p "$font_dir"
+        sudo wget -O "${font_dir}/font.ttf" "$font_url"
+        sudo fc-cache -f
+    fi
+
+    heading "Ubuntu" "Installer"
+    mkdir -p "${HOME}/.vnc"
+    cp ./Files/xstartup "${HOME}/.vnc/"
+    chmod +x "${HOME}/.vnc/xstartup"
+    find /usr -type f -iname "*login1*" -delete
+
+    export DISPLAY=:1
+    grep -q "DISPLAY=:1" /etc/environment ||
+        echo "DISPLAY=:1" >>/etc/environment
+    echo "vncserver :1 -geometry 2000x1000" >"/usr/local/bin/vncstart"
+    echo "vncserver -kill :1" >"/usr/local/bin/vncstop"
+    chmod +x "/usr/local/bin/vncstart" "/usr/local/bin/vncstop"
+
+    if vncstart; then
+        gsettings set org.gnome.desktop.interface font-name 'UbuntuMono Nerd Font Mono 11'
+        gsettings set org.gnome.desktop.interface monospace-font-name 'UbuntuMono Nerd Font Mono 11'
+        gsettings set org.gnome.desktop.interface document-font-name 'UbuntuMono Nerd Font Mono 11'
+        gsettings set org.gnome.desktop.wm.preferences titlebar-font 'UbuntuMono Nerd Font Mono 11'
+
+        gsettings set org.gnome.desktop.interface gtk-theme 'Yaru'
+        gsettings set org.gnome.desktop.interface icon-theme 'Yaru'
+        gsettings set org.gnome.desktop.interface cursor-theme 'Yaru'
+        gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+        gsettings set org.gnome.desktop.background picture-uri '/usr/share/backgrounds/warty-final-ubuntu.png'
+        gsettings set org.gnome.desktop.background picture-uri-dark 'file:///usr/share/backgrounds/warty-final-ubuntu.png'
+        gsettings set org.gnome.mutter dynamic-workspaces false
+        gsettings set org.gnome.desktop.wm.preferences num-workspaces 1
+
+        gnome-extensions enable ubuntu-dock@ubuntu.com
+        gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'LEFT'
+        gsettings set org.gnome.shell.extensions.dash-to-dock extend-height true
+        gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 80
+        gsettings set org.gnome.shell.extensions.dash-to-dock show-trash false
+        gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'firefox.desktop', 'org.gnome.Extensions.desktop', 'org.gnome.tweaks.desktop', 'org.gnome.Terminal.desktop', 'code.desktop', 'org.gnome.Settings.desktop']"
+        vncstop
+    fi
 fi
