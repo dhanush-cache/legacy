@@ -52,10 +52,7 @@ elif [ "$HOME" = "/root" ]; then
 
     copy_repo "/home/${user}"
 else
-    sudo apt update -y
-    sudo apt install -y gnome-shell gnome-terminal gnome-tweaks
-    sudo apt install -y dbus-x11 tigervnc-standalone-server
-    sudo apt install -y yaru-theme-gtk yaru-theme-icon nautilus gnome-shell-extensions gnome-shell-extension-ubuntu-dock
+    install "Gnome" "Terminal" "Tweaks" "DBus" "Yaru-gtk" "Yaru-icon" "File-Manager" "Extensions" "Dock" "VNC" "gnome-shell" "gnome-terminal" "gnome-tweaks" "dbus-x11" "yaru-theme-gtk" "yaru-theme-icon" "nautilus" "gnome-shell-extensions" "gnome-shell-extension-ubuntu-dock" "tigervnc-standalone-server"
 
     heading "Ubuntu" "Installer"
     if apt list firefox 2>/dev/null | grep -q snap; then
