@@ -7,8 +7,8 @@ heading "Environment" "Configuration"
 
 if [ $# -eq 0 ]; then
     echo -e "${c[33]}Select enviornments for configuration...${c[0]}"
-    env_display=("Code Server" "ZSH" "Python" "Shell Scripting" "C/C++" "R Programming")
-    env_init=("dl_code_server" "dl_zsh" "dl_python" "dl_bash" "dl_cpp" "dl_r")
+    env_display=("Visual Studio Code" "Code Server" "ZSH" "Python" "Shell Scripting" "C/C++" "R Programming")
+    env_init=("dl_code" "dl_code_server" "dl_zsh" "dl_python" "dl_bash" "dl_cpp" "dl_r")
     for ((index = 0; index < ${#env_display[@]}; index++)); do
         echo -e "${c[34]}$((index + 1)): ${env_display[index]}${c[0]}"
     done
@@ -77,6 +77,35 @@ install_ext() {
             fi
         done
     done
+}
+
+dl_code() {
+    heading "Code" "Installer"
+
+    install "Wget" "GPG" "wget" "gpg"
+
+    heading "Code" "Installer"
+    if ! command -v code >/dev/null; then
+        wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor >packages.microsoft.gpg
+        sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
+        sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+        rm -f packages.microsoft.gpg
+        install "apt-transport-https" "apt-transport-https"
+        heading "Code" "Installer"
+        install "Visual Studio Code" "code"
+    fi
+
+    cp "./Files/code.desktop" "/usr/share/applications/code.desktop"
+    mkdir -p "$HOME/.config/Code/User"
+    cp "./Files/bin/code" "/usr/local/bin/code"
+    chmod +x "/usr/local/bin/code"
+    cp "./Files/settings.json" "$HOME/.config/Code/User/settings.json"
+    cp "./Files/keybindings.json" "$HOME/.config/Code/User/keybindings.json"
+    heading "Code" "Installer"
+    install_ext "dracula-theme.theme-dracula" "PKief.material-icon-theme" "GitHub.github-vscode-theme" "esbenp.prettier-vscode"
+
+    heading "Code" "Installer"
+    echo -e "${c[33]}Visual Studio Code is successfully installed.${c[0]}"
 }
 
 dl_code_server() {
