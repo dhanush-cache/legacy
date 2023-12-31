@@ -4,4 +4,7 @@ if ! [ -f "/data/data/com.termux/files/usr/bin/sudo" ] || ! [ -f "/data/data/com
     cp "./Files/bin/sudo" "/data/data/com.termux/files/usr/bin/sudo"
     cp "./Files/bin/python3-pip" "/data/data/com.termux/files/usr/bin/python3-pip"
     chmod +x "/data/data/com.termux/files/usr/bin/sudo" "/data/data/com.termux/files/usr/bin/python3-pip"
+    loading "Setting up pkg list..." &
+    yes y | pkg update -y >/dev/null 2>&1
+    end_loading "Setting up pkg list..."
 fi
