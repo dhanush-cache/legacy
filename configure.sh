@@ -51,11 +51,16 @@ install_ext() {
                     end_loading "Installing ${c[33]}${ext}${c[32]} by ${c[34]}${pub}${c[32]}..." "failed"
                     loading "Trying to install ${c[33]}${extension}${c[32]} from marketplace..." &
                     url="https://marketplace.visualstudio.com/items?itemName=${extension}"
-                    version=$(curl -s "$url" | grep \"Version\")
-                    version=${version#*'>'}
-                    version=${version%'<'*}
-                    version=$(echo "$version" | jq -r .Resources.Version)
-                    url="https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${pub}/vsextensions/${ext}/${version}/vspackage"
+                    ext_info=$(curl -s "$url" | grep \"Version\")
+                    ext_info=${ext_info#*'>'}
+                    ext_info=${ext_info%'<'*}
+                    version=$(echo "$ext_info" | jq -r .Resources.Version)
+                    works_with=$(echo "$ext_info" | jq -r .WorksWith)
+                    if [[ $works_with == *'Universal'* ]]; then
+                        url="https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${pub}/vsextensions/${ext}/${version}/vspackage"
+                    else
+                        url="https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${pub}/vsextensions/${ext}/${version}/vspackage?targetPlatform=linux-arm64"
+                    fi
                     SECONDS=0
                     successful=false
                     while [ $SECONDS -lt 30 ]; do
