@@ -12,5 +12,22 @@
     "key": "shift+alt+down",
     "command": "editor.action.copyLinesDownAction",
     "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+alt+n",
+    "command": "runCommands",
+    "args": {
+      "commands": ["workbench.action.positionPanelRight", "code-runner.run"]
+    }
+  },
+  {
+    "key": "ctrl+shift+m",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.actions.view.problems",
+        "workbench.action.positionPanelBottom"
+      ]
+    }
   }
 ]
