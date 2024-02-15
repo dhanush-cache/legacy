@@ -49,6 +49,8 @@ elif [ "$HOME" = "/root" ]; then
     echo "proot-distro login --user ${user} ubuntu" >"/data/data/com.termux/files/usr/bin/ubuntu"
 
     cp ./Files/pip.conf "/etc/pip.conf"
+    cp ./Files/bin/pkey "/usr/local/bin/pkey"
+    cp ./Files/bin/vkey "/usr/local/bin/vkey"
 
     copy_repo "/home/${user}"
 else

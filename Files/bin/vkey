@@ -1,0 +1,17 @@
+#!/bin/bash
+
+termux_dir="/data/data/com.termux/files/home/.termux"
+file="${termux_dir}/termux.properties"
+
+start_pattern='Default extra-key configuration'
+end_pattern='Two rows with more keys'
+
+start=$(sed -n "/$start_pattern/=" $file)
+end=$(sed -n "/$end_pattern/=" $file)
+
+((start++))
+((end--))
+
+setting="extra-keys = [['ESC','/','-','HOME','UP','END','~'], ['TAB','CTRL','ALT','LEFT','DOWN','RIGHT','$']]\n"
+sed -i "${start}, ${end} c$setting" $file
+/data/data/com.termux/files/usr/bin/am broadcast --user 0 -a com.termux.app.reload_style com.termux >/dev/null
