@@ -1,0 +1,14 @@
+#!/bin/bash
+
+opts=("$@")
+
+if pgrep -af code-server >/dev/null 2>&1; then
+    [ "${#opts[@]}" -ge 1 ] && opts=("-r" "${opts[@]}")
+    echo code-server "${opts[@]}"
+    code-server "${opts[@]}" >/dev/null 2>&1
+    /data/data/com.termux/files/usr/bin/am start --user 0 org.chromium.webapk.ae7efb702ea62cce6_v2/org.chromium.webapk.shell_apk.h2o.H2OOpaqueMainActivity >/dev/null 2>&1
+else
+    echo code-server "${opts[@]}"
+    code-server "${opts[@]}" >/dev/null 2>&1 &
+    sleep 5 && /data/data/com.termux/files/usr/bin/am start --user 0 org.chromium.webapk.ae7efb702ea62cce6_v2/org.chromium.webapk.shell_apk.h2o.H2OOpaqueMainActivity >/dev/null 2>&1
+fi

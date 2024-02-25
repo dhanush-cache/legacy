@@ -125,6 +125,8 @@ dl_code_server() {
         curl -fsSL https://code-server.dev/install.sh | sh
     fi
 
+    bin="${PATH%%':'*}"
+    cp "./Files/bin/coder" "${bin}/coder"
     heading "Code-Server" "Installer"
     mkdir -p "$HOME/.config/code-server/" "$HOME/.local/share/code-server/User/"
     cp "./Files/config.yaml" "$HOME/.config/code-server/config.yaml"
