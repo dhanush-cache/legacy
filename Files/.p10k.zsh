@@ -532,3 +532,22 @@
 typeset -g POWERLEVEL9K_CONFIG_FILE=${${(%):-%x}:a}
 (( ${#p10k_config_opts} )) && setopt ${p10k_config_opts[@]}
 'builtin' 'unset' 'p10k_config_opts'
+
+reset-prompt() {
+  local precmd
+  for precmd in $precmd_functions; do
+    $precmd
+  done
+  zle .reset-prompt
+}
+zle -N reset-prompt reset-prompt
+bindkey '^R' reset-prompt
+
+clear-screen() {
+  local precmd
+  for precmd in $precmd_functions; do
+    $precmd
+  done
+  zle .clear-screen
+}
+zle -N clear-screen clear-screen
