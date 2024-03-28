@@ -73,6 +73,7 @@ end_loading() {
 }
 
 install() {
+    local index
     at_home=false
     if [ "$HOME" = "/data/data/com.termux/files/home" ]; then
         source "./Files/termux_adapter.sh"
