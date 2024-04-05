@@ -75,12 +75,12 @@ if [ -n "$id" ]; then
             album="${playlist_title}"
             is_playlist=1
         }
-        final_dir="/sdcard/Music/${album}"
+        final_dir="/sdcard/Music/${album//'|'/'-'}"
     elif [[ "$playlist_id" == PL* ]]; then
         type="playlist"
         url="https://youtube.com/playlist?list=${playlist_id}"
         temp_dir="/sdcard/YouTube Videos/.cache/${playlist_id}"
-        final_dir="/sdcard/YouTube Videos/${playlist_title}"
+        final_dir="/sdcard/YouTube Videos/${playlist_title//'|'/'-'}"
     fi
 else
     heading "YouTube" "Downloader"
